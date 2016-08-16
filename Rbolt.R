@@ -1,6 +1,5 @@
 ################### IGNORE ###################
 # myData = read.csv("perf1.csv")[1:100,-1]
-# head(myData)
 # 
 # t$input$client = 'Client Name'
 # t$input$limit = c(50, 100)
@@ -12,27 +11,24 @@ library(Storm)
 library(forecast)
 
 storm = Storm$new()
-s = storm
-t = s$tuple
-
 storm$lambda = function(s)
 {
     t = s$tuple
     s$ack(t)
-
-    t$output[[1]] = t$input[[1]]    #clinetname
-    t$output[[2]] = t$input[[3]]    #timestamp
-    t$output[[3]] = t$input[[4]]    #processlist
-
-    limit.v = t$input[[2]]          #limit
+    
+    t$output[[1]] = t$input[[1]]    # clinetname
+    t$output[[2]] = t$input[[3]]    # timestamp
+    t$output[[3]] = t$input[[4]]    # processlist
+    
+    limit.v = t$input[[2]]          # limit
     limit.p = 0.7
-
+    
     cpuV = rep(0, 10)
     ramV = rep(0, 10)
     for (i in 0:10)
     {
-        cpuV[i+1] = as.numeric(t$input[i*2+5]) #cpu1...
-        ramV[i+1] = as.numeric(t$input[i*2+6]) #ram1...
+        cpuV[i+1] = as.numeric(t$input[i*2+5]) # cpu1, ...
+        ramV[i+1] = as.numeric(t$input[i*2+6]) # ram1, ...
     }
 
     dataPred = ts(cpuV)
@@ -41,7 +37,7 @@ storm$lambda = function(s)
     se = sqrt(KalmanForecast(n.ahead = 1, fitPred$model)[[2]]*fitPred$sigma2)
     prob = 1-pnorm((limit.v[1]-point)/se)
     warning = prob > limit.p
-
+    
     t$output[4] = as.character(point)
     t$output[5] = as.character(se)
     t$output[6] = as.character(prob)
@@ -62,8 +58,7 @@ storm$lambda = function(s)
     s$emit(t)
 }
 
-t$output
-
 # enter the main tuple-processing loop.
 storm$run()
 
+# storm$lambda(storm)
