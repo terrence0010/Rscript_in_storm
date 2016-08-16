@@ -16,21 +16,22 @@ storm$lambda = function(s)
     t = s$tuple
     s$ack(t)
     
-    t$output[[1]] = t$input[[1]]    # clinetname
-    t$output[[2]] = t$input[[3]]    # timestamp
-    t$output[[3]] = t$input[[4]]    # processlist
-    
-    limit.v = t$input[[2]]          # limit
+    t$output = rep("", 11)
+    t$output[1] = t$input[[1]] #clinetname
+    t$output[2] = t$input[[3]] #timestamp
+    t$output[3] = t$input[[4]] #processlist
+
+    limit.v = t$input[[2]] #limit
     limit.p = 0.7
     
     cpuV = rep(0, 10)
     ramV = rep(0, 10)
     for (i in 0:10)
     {
-        cpuV[i+1] = as.numeric(t$input[i*2+5]) # cpu1, ...
-        ramV[i+1] = as.numeric(t$input[i*2+6]) # ram1, ...
+        cpuV[i+1] = as.numeric(t$input[i*2+5]) #cpu1...
+        ramV[i+1] = as.numeric(t$input[i*2+6]) #ram1...
     }
-
+    
     dataPred = ts(cpuV)
     fitPred = auto.arima(dataPred)
     point = data.frame(forecast(fitPred, h=1))$Point.Forecast
