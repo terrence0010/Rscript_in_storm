@@ -27,9 +27,9 @@ storm$lambda = function(s)
     limit.v = t$input[[2]] #limit
     limit.p = 0.7
     
-    cpuV = rep(0, 10)
-    ramV = rep(0, 10)
-    for (i in 0:10)
+    cpuV = rep(0, 9)
+    ramV = rep(0, 9)
+    for (i in 0:9)
     {
         cpuV[i+1] = as.numeric(t$input[i*2+5]) #cpu1...
         ramV[i+1] = as.numeric(t$input[i*2+6]) #ram1...
