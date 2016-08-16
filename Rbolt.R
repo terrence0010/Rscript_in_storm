@@ -1,24 +1,22 @@
 ################### IGNORE ###################
-# myData = read.csv("perf1.csv")[1:100,-1]
-# 
-# t$input$client = 'Client Name'
-# t$input$limit = c(50, 100)
-# t$input$time = 'TimeStamp'
-# t$input$process = 'ProcessList'
+myData = read.csv("perf1.csv")[1:10,-1]
+
 ################### IGNORE ###################
 
 library(Storm)
 library(forecast)
-
-abc = list(c(1,2,3), c(4,5,6), c('a','b'))
-class(abc[1])
-abc[[1]]
 
 storm = Storm$new()
 storm$lambda = function(s)
 {
     t = s$tuple
     s$ack(t)
+    
+    t$input$client = 'Client Name'
+    t$input$limit = c(50, 100)
+    t$input$time = 'TimeStamp'
+    t$input$process = 'ProcessList'
+    
     
     t$output[1] = t$input[[1]] #clinetname
     t$output[2] = t$input[[3]] #timestamp
@@ -29,11 +27,13 @@ storm$lambda = function(s)
     
     cpuV = rep(0, 9)
     ramV = rep(0, 9)
-    for (i in 0:9)
-    {
-        cpuV[i+1] = as.numeric(t$input[i*2+5]) #cpu1...
-        ramV[i+1] = as.numeric(t$input[i*2+6]) #ram1...
-    }
+    # for (i in 0:9)
+    # {
+    #     cpuV[i+1] = as.numeric(t$input[i*2+5]) #cpu1...
+    #     ramV[i+1] = as.numeric(t$input[i*2+6]) #ram1...
+    # }
+    cpuV = myData$cpu
+    ramV = myData$ram
     
     dataPred = ts(cpuV)
     fitPred = auto.arima(dataPred)
@@ -65,4 +65,4 @@ storm$lambda = function(s)
 # enter the main tuple-processing loop.
 storm$run()
 
-# storm$lambda(storm)
+storm$lambda(storm)
