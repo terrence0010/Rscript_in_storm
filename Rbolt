@@ -20,11 +20,11 @@ storm$lambda = function(s)
     t = s$tuple
     s$ack(t)
 
-    t$output[[1]] = t$input[[1]] #clinetname
-    t$output[[2]] = t$input[[3]] #timestamp
-    t$output[[3]] = t$input[[4]] #processlist
+    t$output[[1]] = t$input[[1]]    #clinetname
+    t$output[[2]] = t$input[[3]]    #timestamp
+    t$output[[3]] = t$input[[4]]    #processlist
 
-    limit.v = t$input[[2]]; #limit
+    limit.v = t$input[[2]]          #limit
     limit.p = 0.7
 
     cpuV = rep(0, 10)
