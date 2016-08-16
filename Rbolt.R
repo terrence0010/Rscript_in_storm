@@ -10,13 +10,16 @@
 library(Storm)
 library(forecast)
 
+abc = list(c(1,2,3), c(4,5,6), c('a','b'))
+class(abc[1])
+abc[[1]]
+
 storm = Storm$new()
 storm$lambda = function(s)
 {
     t = s$tuple
     s$ack(t)
     
-    t$output = rep("", 11)
     t$output[1] = t$input[[1]] #clinetname
     t$output[2] = t$input[[3]] #timestamp
     t$output[3] = t$input[[4]] #processlist
